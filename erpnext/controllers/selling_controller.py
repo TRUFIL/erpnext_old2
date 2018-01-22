@@ -122,11 +122,14 @@ class SellingController(StockController):
 			throw(_("Total allocated percentage for sales team should be 100"))
 
 	def validate_order_type(self):
-		valid_types = ["Sales", "Maintenance", "Shopping Cart"]
+		# DGSOL Modified on 16-01-2018 Start
+		# valid_types = ["Sales", "Maintenance", "Shopping Cart"]
+		valid_types = ["Services","Sales", "Maintenance", "Shopping Cart"]
 		if not self.order_type:
 			self.order_type = "Sales"
 		elif self.order_type not in valid_types:
 			throw(_("Order Type must be one of {0}").format(comma_or(valid_types)))
+		# DGSOL Modified on 16-01-2018 End
 
 	def validate_max_discount(self):
 		for d in self.get("items"):
