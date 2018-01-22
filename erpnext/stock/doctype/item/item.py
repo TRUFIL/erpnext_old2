@@ -104,6 +104,9 @@ class Item(WebsiteGenerator):
 			self.old_website_item_groups = frappe.db.sql_list("""select item_group
 				from `tabWebsite Item Group`
 				where parentfield='website_item_groups' and parenttype='Item' and parent=%s""", self.name)
+		##### Modified on 16-01-2018
+		self.validate_product_bundle()
+		##### Modified on 16-01-2018
 
 	def on_update(self):
 		invalidate_cache_for_item(self)
@@ -686,6 +689,19 @@ class Item(WebsiteGenerator):
 					.format(variant), ItemVariantExistsError)
 
 			validate_item_variant_attributes(self, args)
+
+	##### Modified on 16-01-2018
+	def validate_product_bundle(self):
+		if (self.is_product_bundle):
+			if self.is_stock_item:
+				frappe.throw(_("product bundle must be a non-stock item."))
+
+			if self.is_fixed_asset:
+				frappe.throw(_("product bundle must be a non-asset item."))
+
+			if self.is_purchase_item:
+				frappe.throw(_("product bundle must be a non-purchase item."))
+	##### Modified on 16-01-2018
 
 def get_timeline_data(doctype, name):
 	'''returns timeline data based on stock ledger entry'''
